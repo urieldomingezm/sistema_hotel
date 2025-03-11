@@ -1,6 +1,6 @@
 <?php
 // Definir la ruta raíz del proyecto
-define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
+define('ROOT_PATH', __DIR__ . '/');
 
 // Definir rutas para carpetas específicas
 define('PRIVATE_PATH', ROOT_PATH.'private/');

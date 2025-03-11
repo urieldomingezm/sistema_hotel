@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inventario_hotel/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 require_once(TEMPLATES_PATH . 'header.php');
 
 // Conexión a la base de datos
