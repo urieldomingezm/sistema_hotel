@@ -26,7 +26,7 @@
                     </form>
                     <br>
                     <li class="nav-item">
-                        <a class="nav-links" href="index.php">
+                        <a class="nav-links" href="index.php?page=Inicio">
                             <strong><i class="bi bi-box-seam me-1"></i> Inicio</strong>
                         </a>
                     </li>
@@ -36,9 +36,9 @@
                             <strong><i class="bi bi-table me-1"></i> Tablas</strong>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item"  href="index.php?page=TCP"><i class="bi bi-pc-display me-1"></i> Tabla de Computadoras</a></li>
+                            <li><a class="dropdown-item"  href="index.php?page=Gestion computadoras"><i class="bi bi-pc-display me-1"></i> Tabla de Computadoras</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-left-right me-1"></i> Tabla de Movimientos</a></li>
-                            <li><a class="dropdown-item" href="index.php?page=TUB"><i class="bi bi-geo-alt-fill me-1"></i> Tabla de Ubicaciones</a></li>
+                            <li><a class="dropdown-item" href="index.php?page=Gestion ubicaciones"><i class="bi bi-geo-alt-fill me-1"></i> Tabla de Ubicaciones</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-tags-fill me-1"></i> Tabla de Categorías</a></li>
                         </ul>
                     </li>

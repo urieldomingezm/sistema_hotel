@@ -58,7 +58,7 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Tabla de Ubicaciones</h1>
+        <h1 class="text-center mb-4">Ubicaciones</h1>
         <!-- Botón para abrir el modal de registro -->
         <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
             <i class="bi bi-plus"></i> Registrar Nueva Ubicación
@@ -67,9 +67,9 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
+                    <th>Ubicacion</th>
                     <th>Descripción</th>
-                    <th>Opciones</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,7 +101,7 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal fade" id="modalRegistrar" tabindex="-1" aria-labelledby="modalRegistrarLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="modalRegistrarLabel">Registrar Nueva Ubicación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -116,7 +116,7 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
                             <label for="descripcion" class="form-label">Descripción</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="submit" class="btn btn-success">Registrar ubicacion</button>
                     </form>
                 </div>
             </div>
@@ -127,7 +127,7 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="modalEditarLabel">Editar Ubicación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -138,7 +138,7 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
                             <!-- Columna 1 -->
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre</label>
+                                    <label for="nombre" class="form-label">Ubicacion</label>
                                     <input type="text" class="form-control" id="nombre" name="nombre" required>
                                 </div>
                             </div>
@@ -146,11 +146,11 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" required>
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
                     </form>
                 </div>
             </div>

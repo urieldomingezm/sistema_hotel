@@ -85,8 +85,6 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
                     <th>garantia</th>
                     <th>expericion</th>
                     <th>Opciones</th>
-                    <!-- osea que diga que fecha entro y sigue en garantia -->
-
                 </tr>
             </thead>
             <tbody>
@@ -137,7 +135,7 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="modalEditarLabel">Editar Equipo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -200,7 +198,7 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
                         </div>
                     </form>
                 </div>

@@ -9,12 +9,11 @@ require_once(MENU_PATH . 'menu_principal.php');
 // Verifica si se ha pasado la variable 'page'
 if (isset($_GET['page'])) {
     
-    // Verifica el valor de 'page' y carga el archivo correspondiente
-    if ($_GET['page'] == 'TCP') { // ARCHIVO RANGOS
+    if ($_GET['page'] == 'Gestion computadoras') { // ARCHIVO COMPUTADORAS
         include 'TCP.php';
-    } elseif ($_GET['page'] == 'TUB') { // ARCHIVOS DE UBICACIONES
+    } elseif ($_GET['page'] == 'Gestion ubicaciones') { // ARCHIVOS DE UBICACIONES
         include 'TUB.php'; 
-    } elseif ($_GET['page'] == 'FO') { // ARCHIVO HOME
+    } elseif ($_GET['page'] == 'Inicio') { // ARCHIVO HOME
         include 'FO.php'; 
     } elseif ($_GET['page'] == 'GSP') { // ARCHIVO GESTION DE PAGAS
         include 'GSP.php'; 
