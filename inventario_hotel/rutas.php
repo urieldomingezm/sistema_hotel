@@ -1,6 +1,6 @@
 <?php
 // Definir la ruta raíz del proyecto
-define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/inventario_hotel/');
+define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 
 // Definir rutas para carpetas específicas
 define('PRIVATE_PATH', ROOT_PATH.'private/');

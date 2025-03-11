@@ -1,9 +1,9 @@
 <?php
 
 function conectarBD() {
-    $servername = "localhost";
+    $servername = "db";  // Nombre del servicio en docker-compose.yml
     $username = "root";
-    $password = "";
+    $password = "root";
     $database = "hotel_inventario";
 
     try {
