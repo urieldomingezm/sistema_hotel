@@ -16,7 +16,7 @@
    </footer>
 
    <!-- BOOTSTRAP -->
-   <script src="/inventario_hotel/private/assets/librerias/bootstrap/js/bootstrap.bundle.min.js"></script>
+   <script src="/private/assets/librerias/bootstrap/js/bootstrap.bundle.min.js"></script>
 
    <!-- JUST-VALIDATE -->
    <script src="https://cdn.jsdelivr.net/npm/just-validate@latest/dist/just-validate.production.min.js"></script>
