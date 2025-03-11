@@ -1,6 +1,8 @@
 <?php
+ob_start();
 session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
+
 require_once(TEMPLATES_PATH . 'header.php');
 
 // Conexión a la base de datos
@@ -8,7 +10,9 @@ require_once(CONFIG_PATH . 'bd.php'); // Asegúrate de que este archivo contenga
 
 // Verificar si la conexión es válida
 if (!$conn) {
-    die("<div class='alert alert-danger' id='alert'>Error de conexión con la base de datos.</div>");
+    $_SESSION['error'] = "Error de conexión con la base de datos.";
+    header("Location: /registrer.php");
+    exit;
 }
 
 // Verificar si se ha enviado el formulario
@@ -17,11 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST["register_nombre"]);
     $apellidos = trim($_POST["register_apellidos"]);
     $email = trim($_POST["register_email"]);
-    $contraseña = $_POST["register_contraseña"];
+    $contraseña = $_POST["register_password"];
 
     // Validar que los campos no estén vacíos
     if (empty($nombre) || empty($apellidos) || empty($email) || empty($contraseña)) {
-        echo "<div class='alert alert-danger' id='alert'>Todos los campos son obligatorios.</div>";
+        $_SESSION['error'] = "Todos los campos son obligatorios.";
+        header("Location: /registrer.php");
         exit;
     }
 
@@ -33,12 +38,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            echo "<div class='alert alert-danger' id='alert'>El correo electrónico ya está registrado.</div>";
-            header("Location: registrer.php");
+            $_SESSION['error'] = "El correo electrónico ya está registrado.";
+            header("Location: /registrer.php");
             exit;
         }
-
-        // No hacer hash de la contraseña, se guarda tal cual
+        
         // Insertar el nuevo usuario en la base de datos
         $sql = "INSERT INTO login_usuarios (usuario_nombre, usuario_apellido, usuario_email, usuario_password) 
                 VALUES (:nombre, :apellidos, :email, :password)";
@@ -46,23 +50,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
         $stmt->bindParam(':apellidos', $apellidos, PDO::PARAM_STR);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':password', $contraseña, PDO::PARAM_STR); // Guardamos la contraseña tal cual
+        $stmt->bindParam(':password', $contraseña, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
-            // Registro exitoso
-            echo "<div class='alert alert-success' id='alert'>Registro exitoso. Ahora puedes iniciar sesión.</div>";
-            // Redireccionar al usuario a la página de inicio de sesión
-            header("Location: index.php");
+            $_SESSION['success'] = "Registro exitoso. Ahora puedes iniciar sesión.";
+            header("Location: /index.php");
             exit;
         } else {
-            echo "<div class='alert alert-danger' id='alert'>Hubo un error al registrar el usuario.</div>";
+            $_SESSION['error'] = "Hubo un error al registrar el usuario.";
+            header("Location: /registrer.php");
+            exit;
         }
     } catch (PDOException $e) {
-        echo "<div class='alert alert-danger' id='alert'>Error en la base de datos: " . $e->getMessage() . "</div>";
+        $_SESSION['error'] = "Error en la base de datos: " . $e->getMessage();
+        header("Location: /registrer.php");
+        exit;
     }
 }
+ob_end_flush();
 ?>
 
+<br>
 
 <body class="d-flex flex-column min-vh-100" style="background-color: rgb(14 177 251) !important;">
     <br>
@@ -72,7 +80,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="card-body text-center" style="background-color: #f9f6f5;">
                 <img alt="Iberostar Selection Playa Mita" src="private/img/logo.jpg" class="img-fluid mb-4">
                 <h2>Registros de usuarios</h2>
-                <br>
+
+                <?php
+                if (isset($_SESSION['error'])) {
+                    echo "<div class='alert alert-danger' id='alert'>{$_SESSION['error']}</div>";
+                    unset($_SESSION['error']);
+                }
+                if (isset($_SESSION['success'])) {
+                    echo "<div class='alert alert-success' id='alert'>{$_SESSION['success']}</div>";
+                    unset($_SESSION['success']);
+                }
+                ?>
+
                 <form id="registerForm" method="POST">
                     <div class="form-group row">
                         <div class="col-md-6">
@@ -92,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <br>
                     <div class="form-group">
                         <label for="password">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="register_contraseña" required>
+                        <input type="password" class="form-control" id="password" name="register_password" required>
                     </div>
                     <br>
                     <button type="submit" class="btn btn-success btn-block">Registrar datos</button>
@@ -141,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     errorMessage: 'Los apellidos solo pueden contener letras y espacios',
                 }
             ])
-        .addField('#email', [{
+            .addField('#email', [{
                     rule: 'required',
                     errorMessage: 'El correo electrónico es obligatorio',
                 },
@@ -161,17 +180,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 },
             ])
             .onSuccess((event) => {
-                // Si la validación es exitosa, el formulario se envía
                 event.target.submit();
             });
 
-        // Hacer desaparecer las alertas después de 3 segundos
         setTimeout(function() {
             const alert = document.getElementById("alert");
             if (alert) {
                 alert.style.display = 'none';
             }
-        }, 3000); // 3000 milisegundos = 3 segundos
+        }, 3000);
     });
 </script>
 

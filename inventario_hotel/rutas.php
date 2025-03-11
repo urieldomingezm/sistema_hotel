@@ -13,5 +13,3 @@ define('PROCESOS_PATH', PRIVATE_PATH.'menu/'); // RUTA DE PROCESOS
 
 // define('MENU_PATH', PRIVATE_PATH.'menu/');
 ?>
-
-
