@@ -1,10 +1,7 @@
 <?php
+session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 require_once(TEMPLATES_PATH . 'header.php');
-?>
-
-<?php
-session_start();
 
 // Conexión a la base de datos
 require_once(CONFIG_PATH . 'bd.php'); // Asegúrate de que este archivo contenga $conn
@@ -179,6 +176,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </script>
 
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inventario_hotel/rutas.php');
 require_once(TEMPLATES_PATH . 'footer.php');
 ?>
