@@ -240,7 +240,7 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `index.php?page=TCP&eliminar=${id}`;
+                    window.location.href = `index.php?page=Gestion computadoras&eliminar=${id}`;
                 }
             });
         }

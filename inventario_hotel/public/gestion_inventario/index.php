@@ -6,7 +6,7 @@ require_once(MENU_PATH . 'menu_principal.php');
 
 
 <?php
-// Verifica si se ha pasado la variable 'page'
+
 if (isset($_GET['page'])) {
     
     if ($_GET['page'] == 'Gestion computadoras') { // ARCHIVO COMPUTADORAS

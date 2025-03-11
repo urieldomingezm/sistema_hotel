@@ -192,7 +192,7 @@ $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `index.php?page=TUB&eliminar=${id}`;
+                    window.location.href = `index.php?page=Gestion ubicaciones&eliminar=${id}`;
                 }
             });
         }
