@@ -153,7 +153,7 @@
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/inventario_hotel/private/procesos/logout.php';
+                window.location.href = '/private/procesos/logout.php';
             }
         });
     }

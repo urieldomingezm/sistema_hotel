@@ -21,5 +21,5 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- CUSTOM -->
-    <link rel="stylesheet" href="/inventario_hotel/private/assets/css/style.css">
+    <link rel="stylesheet" href="/private/assets/css/style.css">
 </head>

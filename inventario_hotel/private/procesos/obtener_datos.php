@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inventario_hotel/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 require_once(CONFIG_PATH . 'bd.php');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *'); // Habilita CORS si accedes desde otro dominio

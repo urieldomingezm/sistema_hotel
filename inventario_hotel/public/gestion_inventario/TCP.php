@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inventario_hotel/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 require_once(CONFIG_PATH . 'bd.php');
 
 // Conectar a la base de datos
@@ -68,7 +68,7 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Tabla de Computadoras</h1> 
+        <h1 class="text-center mb-4">Computadoras</h1> 
         <table id="tabla-equipos" class="table table-bordered table-borderless table-striped table-dark">
             <thead>
                 <tr>
@@ -80,10 +80,10 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
                     <th>Modelo</th>
                     <th>Categoría</th>
                     <th>Ubicación</th>
-                    <th>Fecha de Adquisición</th>
+                    <th>Adquisición</th>
                     <th>Estado</th>
-                    <th>Fecha de garantia</th>
-                    <th>Fecha de expericion</th>
+                    <th>garantia</th>
+                    <th>expericion</th>
                     <th>Opciones</th>
                     <!-- osea que diga que fecha entro y sigue en garantia -->
 

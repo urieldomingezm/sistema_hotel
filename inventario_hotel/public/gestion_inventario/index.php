@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . '/inventario_hotel/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 require_once(TEMPLATES_PATH . 'header.php');
 require_once(MENU_PATH . 'menu_principal.php');
 ?>
@@ -14,7 +14,7 @@ if (isset($_GET['page'])) {
         include 'TCP.php';
     } elseif ($_GET['page'] == 'TUB') { // ARCHIVOS DE UBICACIONES
         include 'TUB.php'; 
-    } elseif ($_GET['page'] == 'HOM') { // ARCHIVO HOME
+    } elseif ($_GET['page'] == 'FO') { // ARCHIVO HOME
         include 'FO.php'; 
     } elseif ($_GET['page'] == 'GSP') { // ARCHIVO GESTION DE PAGAS
         include 'GSP.php'; 
