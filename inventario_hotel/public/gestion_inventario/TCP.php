@@ -103,6 +103,18 @@ $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
                         <td><?php echo htmlspecialchars($equipo['fecha_garantia']); ?></td>
                         <td><?php echo htmlspecialchars($equipo['fecha_expericion']); ?></td>
                         <td>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="accionesMenu"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Acciones
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="accionesMenu">
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                        href="#">Editar</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal"
+                                        data-bs-target="#modal_despedir_persona" href="#">Eliminar</a></li>
+                            </ul>
+                        </div>
                             <!-- Botón para abrir el modal de editar -->
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar"
                                 data-id="<?php echo $equipo['id']; ?>"
