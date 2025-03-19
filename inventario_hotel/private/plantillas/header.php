@@ -17,9 +17,12 @@
     <!-- DataTables CSS -->
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link id="bootstrap-css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CHART -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 
     <!-- CUSTOM -->
     <link rel="stylesheet" href="/private/assets/css/style.css">

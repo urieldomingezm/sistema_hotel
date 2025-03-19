@@ -1,105 +1,164 @@
 <?php
-ob_start();
 session_start();
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
-require_once(TEMPLATES_PATH . 'header.php');
+$host = 'db';
+$dbname = 'hotel_inventario';
+$username = 'root';
+$password = 'root';
 
-// Conexión a la base de datos
-require_once(CONFIG_PATH . 'bd.php'); // Asegúrate de que este archivo contenga $conn
-
-// Verificar si la conexión es válida
-if (!$conn) {
-    die("<div class='alert alert-danger'>Error de conexión con la base de datos.</div>");
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
+    exit;
 }
 
-// Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
     $email = trim($_POST["usuario_email"]);
     $password = $_POST["usuario_password"];
 
-    // Validar que los campos no estén vacíos
-    if (empty($email) || empty($password)) {
-        echo "<div class='alert alert-danger'>Todos los campos son obligatorios.</div>";
-        exit;
-    }
-
     try {
-        // Buscar el usuario en la base de datos
-        $sql = "SELECT id_usuario, usuario_nombre, usuario_apellido, usuario_password FROM login_usuarios WHERE usuario_email = :email";
+        $sql = "SELECT id_usuario, usuario_nombre, usuario_apellido, usuario_password FROM login_usuarios WHERE usuario_email = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt->execute([$email]);
 
         if ($stmt->rowCount() == 1) {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Comparar la contraseña en texto claro
-            if ($password === $usuario['usuario_password']) {
-                // Iniciar sesión
+            // Change the password verification to use password_verify
+            if (password_verify($password, $usuario['usuario_password'])) {
                 $_SESSION['id_usuario'] = $usuario['id_usuario'];
                 $_SESSION['usuario_nombre'] = $usuario['usuario_nombre'];
                 $_SESSION['usuario_apellido'] = $usuario['usuario_apellido'];
                 $_SESSION['usuario_email'] = $email;
-
-                // Redireccionar a la página principal
-                header("Location: public/gestion_inventario/index.php");
+                
+                echo json_encode(['success' => true, 'message' => '¡Bienvenido!']);
                 exit;
             } else {
-                echo "<div class='alert alert-danger'>Contraseña incorrecta.</div>";
+                echo json_encode(['success' => false, 'message' => 'Contraseña incorrecta']);
+                exit;
             }
         } else {
-            echo "<div class='alert alert-danger'>Usuario no encontrado.</div>";
+            echo json_encode(['success' => false, 'message' => 'Usuario no encontrado']);
+            exit;
         }
-    } catch (PDOException $e) {
-        echo "<div class='alert alert-danger'>Error en la base de datos: " . $e->getMessage() . "</div>";
+    } catch(PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        exit;
     }
 }
 ?>
 
-<body class="d-flex flex-column min-vh-100" style="background-color: rgb(14 177 251) !important;">
-    <br>
-    <br>
-    <div class="container d-flex justify-content-center align-items-center">
-        <div class="card" style="width: 24rem;">
-            <div class="card-body text-center" style="background-color: #f9f6f7;">
-                <img alt="Iberostar Selection Playa Mita" src="private/img/logo.jpg" class="img-fluid mb-4">
-                <h2>Inicio de Sesión</h2>
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="text" class="form-control" id="email" name="usuario_email" required>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
+</head>
+<body style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="card shadow-lg" style="max-width: 400px; width: 100%;">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <img src="private/img/logo.jpg" alt="Logo" class="img-fluid mb-3" style="max-width: 200px;">
+                    <h2 class="fw-bold text-primary">Inicio de Sesión</h2>
+                </div>
+
+                <form id="loginForm" method="POST">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" name="usuario_email" placeholder="correo@ejemplo.com">
+                        <label for="email">Correo electrónico</label>
                     </div>
-                    <br>
-                    <div class="form-group">
+
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="password" name="usuario_password" placeholder="Contraseña">
                         <label for="password">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="usuario_password" required>
                     </div>
-                    <br>
-                    <button type="submit" class="btn btn-success btn-block">Iniciar Sesión</button>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
+                        Iniciar Sesión
+                    </button>
+
+                    <p class="text-center mb-0">
+                        ¿No tienes cuenta? <a href="registrer.php" class="text-decoration-none">Regístrate</a>
+                    </p>
                 </form>
-                <br>
-                <p>¿No tienes una cuenta? <a href="registrer.php">Regístrate</a></p>
             </div>
         </div>
     </div>
-</body>
 
-<?php
+    <script>
+        const validation = new JustValidate('#loginForm', {
+            validateBeforeSubmitting: true,
+        });
+
+        validation
+            .addField('#email', [
+                {
+                    rule: 'required',
+                    errorMessage: 'El correo es obligatorio',
+                },
+                {
+                    rule: 'email',
+                    errorMessage: 'Correo no válido',
+                }
+            ])
+            .addField('#password', [
+                {
+                    rule: 'required',
+                    errorMessage: 'La contraseña es obligatoria',
+                }
+            ])
+            .onSuccess((event) => {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+
+                fetch(event.target.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'public/gestion_inventario/index.php';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error al procesar la solicitud',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+    </script>
+</body>
+</html>
+
+
+<?php 
+require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
+
 require_once(TEMPLATES_PATH . 'footer.php');
 ?>
-
-<!-- Agregar un script para desaparecer las alertas después de unos segundos -->
-<script>
-    setTimeout(function() {
-        var alert = document.querySelector('.alert');
-        if (alert) {
-            alert.style.transition = 'opacity 1s';
-            alert.style.opacity = 0;
-            setTimeout(function() {
-                alert.remove();
-            }, 1000); // Elimina la alerta después de la transición
-        }
-    }, 3000); // Duración de la alerta (en milisegundos)
-</script>

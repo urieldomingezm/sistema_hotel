@@ -66,81 +66,89 @@ $stmt_equipos->execute();
 $equipos = $stmt_equipos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<meta name="keywords" content="Gestion de computadoras">
+
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Computadoras</h1> 
-        <table id="tabla-equipos" class="table table-bordered table-borderless table-striped table-dark">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Número de Serie</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Categoría</th>
-                    <th>Ubicación</th>
-                    <th>Adquisición</th>
-                    <th>Estado</th>
-                    <th>garantia</th>
-                    <th>expericion</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($equipos as $equipo): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($equipo['id']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['descripcion']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['numero_serie']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['marca']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['modelo']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['categoria_nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['ubicacion_nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['fecha_adquisicion']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['estado']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['fecha_garantia']); ?></td>
-                        <td><?php echo htmlspecialchars($equipo['fecha_expericion']); ?></td>
-                        <td>
-                        <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="accionesMenu"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Acciones
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="accionesMenu">
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                        href="#">Editar</a></li>
-                                <li><a class="dropdown-item" data-bs-toggle="modal"
-                                        data-bs-target="#modal_despedir_persona" href="#">Eliminar</a></li>
-                            </ul>
+        <h1 class="text-center mb-4">Ubicacion de computadoras</h1> 
+        <div class="container-fluid mt-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Gestión de Equipos</h3>
+                        <button class="btn btn-light" onclick="exportToExcel()">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Exportar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tabla-equipos" class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>N° Serie</th>
+                                    <th>Marca</th>
+                                    <th>Modelo</th>
+                                    <th>Categoría</th>
+                                    <th>Ubicación</th>
+                                    <th>Adquisición</th>
+                                    <th>Operativo</th>
+                                    <th>Garantía</th>
+                                    <th>Expiración</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($equipos as $equipo): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($equipo['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($equipo['nombre']); ?></td>
+                                        <td>
+                                            <span class="d-inline-block text-truncate" style="max-width: 150px;" title="<?php echo htmlspecialchars($equipo['descripcion']); ?>">
+                                                <?php echo htmlspecialchars($equipo['descripcion']); ?>
+                                            </span>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($equipo['numero_serie']); ?></td>
+                                        <td><?php echo htmlspecialchars($equipo['marca']); ?></td>
+                                        <td><?php echo htmlspecialchars($equipo['modelo']); ?></td>
+                                        <td>
+                                            <span class="badge bg-info"><?php echo htmlspecialchars($equipo['categoria_nombre']); ?></span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success"><?php echo htmlspecialchars($equipo['ubicacion_nombre']); ?></span>
+                                        </td>
+                                        <td><?php echo date('d/m/Y', strtotime($equipo['fecha_adquisicion'])); ?></td>
+                                        <td>
+                                            <span class="badge bg-<?php echo $equipo['estado'] == 'Activo' ? 'success' : 'warning'; ?>">
+                                                <?php echo htmlspecialchars($equipo['estado']); ?>
+                                            </span>
+                                        </td>
+                                        <td><?php echo date('d/m/Y', strtotime($equipo['fecha_garantia'])); ?></td>
+                                        <td><?php echo date('d/m/Y', strtotime($equipo['fecha_expericion'])); ?></td>
+                                        <td>
+                                            <div class="d-flex gap-2 justify-content-center">
+                                                <button class="btn btn-warning btn-sm" 
+                                                        onclick="editarEquipo(<?php echo htmlspecialchars(json_encode($equipo)); ?>)">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm" 
+                                                            onclick="confirmarEliminacion(<?php echo $equipo['id']; ?>, '<?php echo $equipo['nombre']; ?>')">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
-                            <!-- Botón para abrir el modal de editar -->
-                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                data-id="<?php echo $equipo['id']; ?>"
-                                data-nombre="<?php echo htmlspecialchars($equipo['nombre']); ?>"
-                                data-descripcion="<?php echo htmlspecialchars($equipo['descripcion']); ?>"
-                                data-numero_serie="<?php echo htmlspecialchars($equipo['numero_serie']); ?>"
-                                data-marca="<?php echo htmlspecialchars($equipo['marca']); ?>"
-                                data-modelo="<?php echo htmlspecialchars($equipo['modelo']); ?>"
-                                data-categoria="<?php echo htmlspecialchars($equipo['categoria_nombre']); ?>"
-                                data-ubicacion="<?php echo htmlspecialchars($equipo['ubicacion_nombre']); ?>"
-                                data-fecha_adquisicion="<?php echo htmlspecialchars($equipo['fecha_adquisicion']); ?>"
-                                data-estado="<?php echo htmlspecialchars($equipo['estado']); ?>"
-                                data-fecha_garantia="<?php echo htmlspecialchars($equipo['fecha_garantia']); ?>"
-                                data-fecha_expericion="<?php echo htmlspecialchars($equipo['fecha_expericion']); ?>">
-
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <!-- Botón para eliminar -->
-                            <button class="btn btn-danger btn-sm" onclick="confirmarEliminacion(<?php echo $equipo['id']; ?>)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal para editar -->

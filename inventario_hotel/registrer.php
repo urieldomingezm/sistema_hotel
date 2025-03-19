@@ -1,197 +1,203 @@
 <?php
-ob_start();
 session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 
-require_once(TEMPLATES_PATH . 'header.php');
+$host = 'db';
+$dbname = 'hotel_inventario';
+$username = 'root';
+$password = 'root';
 
-// Conexión a la base de datos
-require_once(CONFIG_PATH . 'bd.php'); // Asegúrate de que este archivo contenga $conn
-
-// Verificar si la conexión es válida
-if (!$conn) {
-    $_SESSION['error'] = "Error de conexión con la base de datos.";
-    header("Location: /registrer.php");
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
     exit;
 }
 
-// Verificar si se ha enviado el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Obtener los datos del formulario
     $nombre = trim($_POST["register_nombre"]);
     $apellidos = trim($_POST["register_apellidos"]);
     $email = trim($_POST["register_email"]);
-    $contraseña = $_POST["register_password"];
-
-    // Validar que los campos no estén vacíos
-    if (empty($nombre) || empty($apellidos) || empty($email) || empty($contraseña)) {
-        $_SESSION['error'] = "Todos los campos son obligatorios.";
-        header("Location: /registrer.php");
-        exit;
-    }
+    $contraseña = password_hash($_POST["register_password"], PASSWORD_DEFAULT);
 
     try {
-        // Verificar si el correo ya está registrado
-        $sql = "SELECT id_usuario FROM login_usuarios WHERE usuario_email = :email";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0) {
-            $_SESSION['error'] = "El correo electrónico ya está registrado.";
-            header("Location: /registrer.php");
-            exit;
-        }
+        $stmt = $conn->prepare("SELECT id_usuario FROM login_usuarios WHERE usuario_email = ?");
+        $stmt->execute([$email]);
         
-        // Insertar el nuevo usuario en la base de datos
-        $sql = "INSERT INTO login_usuarios (usuario_nombre, usuario_apellido, usuario_email, usuario_password) 
-                VALUES (:nombre, :apellidos, :email, :password)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-        $stmt->bindParam(':apellidos', $apellidos, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':password', $contraseña, PDO::PARAM_STR);
-
-        if ($stmt->execute()) {
-            $_SESSION['success'] = "Registro exitoso. Ahora puedes iniciar sesión.";
-            header("Location: /index.php");
-            exit;
-        } else {
-            $_SESSION['error'] = "Hubo un error al registrar el usuario.";
-            header("Location: /registrer.php");
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['success' => false, 'message' => 'Este correo ya está registrado']);
             exit;
         }
-    } catch (PDOException $e) {
-        $_SESSION['error'] = "Error en la base de datos: " . $e->getMessage();
-        header("Location: /registrer.php");
+
+        $sql = "INSERT INTO login_usuarios (usuario_nombre, usuario_apellido, usuario_email, usuario_password) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        
+        if ($stmt->execute([$nombre, $apellidos, $email, $contraseña])) {
+            echo json_encode(['success' => true, 'message' => '¡Registro exitoso!']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al registrar']);
+        }
+        exit;
+    } catch(PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
         exit;
     }
 }
-ob_end_flush();
 ?>
 
-<br>
-
-<body class="d-flex flex-column min-vh-100" style="background-color: rgb(14 177 251) !important;">
-    <br>
-    <br>
-    <div class="container d-flex justify-content-center align-items-center">
-        <div class="card" style="width: 24rem;">
-            <div class="card-body text-center" style="background-color: #f9f6f5;">
-                <img alt="Iberostar Selection Playa Mita" src="private/img/logo.jpg" class="img-fluid mb-4">
-                <h2>Registros de usuarios</h2>
-
-                <?php
-                if (isset($_SESSION['error'])) {
-                    echo "<div class='alert alert-danger' id='alert'>{$_SESSION['error']}</div>";
-                    unset($_SESSION['error']);
-                }
-                if (isset($_SESSION['success'])) {
-                    echo "<div class='alert alert-success' id='alert'>{$_SESSION['success']}</div>";
-                    unset($_SESSION['success']);
-                }
-                ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
+</head>
+<body style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+        <div class="card shadow-lg" style="max-width: 500px; width: 100%;">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <img src="private/img/logo.jpg" alt="Logo" class="img-fluid mb-3" style="max-width: 200px;">
+                    <h2 class="fw-bold text-primary">Registro de Usuario</h2>
+                </div>
 
                 <form id="registerForm" method="POST">
-                    <div class="form-group row">
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="nombre">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="register_nombre" required>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="nombre" name="register_nombre" placeholder="Nombre">
+                                <label for="nombre">Nombre</label>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label for="apellidos">Apellidos</label>
-                            <input type="text" class="form-control" id="apellidos" name="register_apellidos" required>
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="apellidos" name="register_apellidos" placeholder="Apellidos">
+                                <label for="apellidos">Apellidos</label>
+                            </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="form-group">
+
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" name="register_email" placeholder="correo@ejemplo.com">
                         <label for="email">Correo electrónico</label>
-                        <input type="email" class="form-control" id="email" name="register_email" required>
                     </div>
-                    <br>
-                    <div class="form-group">
+
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="password" name="register_password" placeholder="Contraseña">
                         <label for="password">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="register_password" required>
                     </div>
-                    <br>
-                    <button type="submit" class="btn btn-success btn-block">Registrar datos</button>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2">Registrarse</button>
+
+                    <p class="text-center mt-3">
+                        ¿Ya tienes cuenta? <a href="index.php" class="text-decoration-none">Iniciar sesión</a>
+                    </p>
                 </form>
-                <br>
-                <p>¿Tienes cuenta? <a href="index.php">Iniciar sesión</a></p>
             </div>
         </div>
     </div>
-</body>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
+    <script>
         const validation = new JustValidate('#registerForm', {
             validateBeforeSubmitting: true,
         });
 
         validation
-            .addField('#nombre', [{
+            .addField('#nombre', [
+                {
                     rule: 'required',
                     errorMessage: 'El nombre es obligatorio',
                 },
                 {
                     rule: 'minLength',
                     value: 3,
-                    errorMessage: 'El nombre debe tener al menos 3 caracteres',
+                    errorMessage: 'Mínimo 3 caracteres',
                 },
                 {
                     rule: 'custom',
                     validator: (value) => /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(value),
-                    errorMessage: 'El nombre solo puede contener letras y espacios',
+                    errorMessage: 'Solo letras y espacios',
                 }
             ])
-            .addField('#apellidos', [{
+            .addField('#apellidos', [
+                {
                     rule: 'required',
                     errorMessage: 'Los apellidos son obligatorios',
                 },
                 {
                     rule: 'minLength',
                     value: 3,
-                    errorMessage: 'Los apellidos deben tener al menos 3 caracteres',
+                    errorMessage: 'Mínimo 3 caracteres',
                 },
                 {
                     rule: 'custom',
                     validator: (value) => /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(value),
-                    errorMessage: 'Los apellidos solo pueden contener letras y espacios',
+                    errorMessage: 'Solo letras y espacios',
                 }
             ])
-            .addField('#email', [{
+            .addField('#email', [
+                {
                     rule: 'required',
-                    errorMessage: 'El correo electrónico es obligatorio',
+                    errorMessage: 'El correo es obligatorio',
                 },
                 {
                     rule: 'email',
-                    errorMessage: 'El correo electrónico no es válido',
-                },
+                    errorMessage: 'Correo no válido',
+                }
             ])
-            .addField('#password', [{
+            .addField('#password', [
+                {
                     rule: 'required',
                     errorMessage: 'La contraseña es obligatoria',
                 },
                 {
                     rule: 'minLength',
                     value: 6,
-                    errorMessage: 'La contraseña debe tener al menos 6 caracteres',
-                },
+                    errorMessage: 'Mínimo 6 caracteres',
+                }
             ])
             .onSuccess((event) => {
-                event.target.submit();
+                event.preventDefault();
+                const formData = new FormData(event.target);
+
+                fetch(event.target.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'index.php';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error al procesar la solicitud',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
             });
-
-        setTimeout(function() {
-            const alert = document.getElementById("alert");
-            if (alert) {
-                alert.style.display = 'none';
-            }
-        }, 3000);
-    });
-</script>
-
-<?php
-require_once(TEMPLATES_PATH . 'footer.php');
-?>
+    </script>
+</body>
+</html>

@@ -1,170 +1,249 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 require_once(CONFIG_PATH . 'bd.php');
+require_once(TEMPLATES_PATH . 'header.php');
 ?>
 
-<!-- CONTENIDO PRINCIPAL -->
-<div class="container mt-5 pt-5">
-    <!-- BIENVENIDA -->
-    <div class="jumbotron text-center bg-primary text-white p-4 rounded shadow">
-        <h1 class="display-5">Bienvenido al Inventario de Equipos</h1>
-        <p class="lead">Administra y visualiza el estado de tu inventario en tiempo real con gráficos dinámicos.</p>
-    </div>
-
-    <!-- RESUMEN RÁPIDO -->
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <div class="card bg-info text-white shadow-lg">
-                <div class="card-body">
-                    <h5 class="card-title">Total Equipos</h5>
-                    <h2 id="totalEquipos">5</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white shadow-lg">
-                <div class="card-body">
-                    <h5 class="card-title">Ubicaciones</h5>
-                    <h2 id="totalUbicaciones">5</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-dark shadow-lg">
-                <div class="card-body">
-                    <h5 class="card-title">Estados</h5>
-                    <h2 id="totalEstados">1</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-danger text-white shadow-lg">
-                <div class="card-body">
-                    <h5 class="card-title">movimiento</h5>
-                    <h2 id="totalMovimientos">4</h2>
+<div class="container-fluid mt-3">
+    <!-- Header Section -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card bg-primary text-white shadow-lg border-0">
+                <div class="card-body py-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-building-fill me-3 display-4"></i>
+                                <div>
+                                    <h1 class="h2 fw-bold mb-1">Sistema de Gestión de Inventario</h1>
+                                    <p class="mb-0">Iberostar Selection Playa Mita</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="d-flex justify-content-md-end align-items-center">
+                                <div class="text-end me-3">
+                                    <h6 class="mb-1"><?php echo date('d/m/Y'); ?></h6>
+                                    <h5 class="mb-0"><?php echo date('H:i'); ?></h5>
+                                </div>
+                                <div class="bg-white rounded-circle p-3">
+                                    <i class="bi bi-clock-history text-primary fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- DASHBOARD GRÁFICAS -->
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card shadow-lg p-3">
-                <h5 class="text-center">Equipos por Categoría</h5>
-                <canvas id="graficoEquipos"></canvas>
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-3">
+        <div class="col-xl-3 col-sm-6">
+            <div class="card bg-info text-white h-100 shadow border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Total Equipos</h6>
+                        <h2 class="display-6 mb-0" id="totalEquipos">0</h2>
+                    </div>
+                    <div class="bg-white p-3 rounded-circle">
+                        <i class="bi bi-pc-display text-info fs-3"></i>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card shadow-lg p-3">
-                <h5 class="text-center">Equipos por Ubicación</h5>
-                <canvas id="graficoUbicaciones"></canvas>
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="card bg-success text-white h-100 shadow border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Ubicaciones</h6>
+                        <h2 class="display-6 mb-0" id="totalUbicaciones">0</h2>
+                    </div>
+                    <div class="bg-white p-3 rounded-circle">
+                        <i class="bi bi-geo-alt text-success fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="card bg-warning text-dark h-100 shadow border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Estados</h6>
+                        <h2 class="display-6 mb-0" id="totalEstados">0</h2>
+                    </div>
+                    <div class="bg-white p-3 rounded-circle">
+                        <i class="bi bi-list-check text-warning fs-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-sm-6">
+            <div class="card bg-danger text-white h-100 shadow border-0">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-uppercase mb-1">Movimientos</h6>
+                        <h2 class="display-6 mb-0" id="totalMovimientos">0</h2>
+                    </div>
+                    <div class="bg-white p-3 rounded-circle">
+                        <i class="bi bi-arrow-left-right text-danger fs-3"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card shadow-lg p-3">
-                <h5 class="text-center">Estados de Equipos</h5>
-                <canvas id="graficoEstados"></canvas>
+
+    <!-- Main Content -->
+    <div class="row g-3">
+        <div class="col-xl-8">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white py-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle fs-4 me-2"></i>
+                        <div>
+                            <h5 class="mb-1">Bienvenido(a), <?php echo $_SESSION['usuario_nombre']; ?></h5>
+                            <small>Último acceso: <?php echo date('d/m/Y H:i'); ?></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light h-100">
+                                <div class="card-body">
+                                    <h6 class="fw-bold mb-3 text-primary">
+                                        <i class="bi bi-star-fill text-warning me-2"></i>Acciones Rápidas
+                                    </h6>
+                                    <div class="d-grid gap-3">
+                                        <a href="index.php?page=Gestion computadoras" class="btn btn-primary">
+                                            <i class="bi bi-pc-display me-2"></i>Gestionar Equipos
+                                        </a>
+                                        <a href="index.php?page=Gestion ubicaciones" class="btn btn-success">
+                                            <i class="bi bi-geo-alt me-2"></i>Gestionar Ubicaciones
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light h-100">
+                                <div class="card-body">
+                                    <h6 class="fw-bold mb-3 text-primary">
+                                        <i class="bi bi-graph-up me-2"></i>Resumen
+                                    </h6>
+                                    <div class="list-group">
+                                        <div class="list-group-item">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-primary rounded-pill me-2">1</span>
+                                                <span>Total de equipos registrados</span>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-success rounded-pill me-2">2</span>
+                                                <span>Ubicaciones activas</span>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-info rounded-pill me-2">3</span>
+                                                <span>Movimientos registrados hoy</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card shadow-lg p-3">
-                <h5 class="text-center">Movimientos de Equipos</h5>
-                <canvas id="graficoMovimientos"></canvas>
+
+        <div class="col-xl-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-shield-check me-2"></i>Estado del Sistema
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success text-white p-2 rounded-circle me-3">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Servicios Activos</h6>
+                                    <small class="text-success">Funcionando correctamente</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info text-white p-2 rounded-circle me-3">
+                                    <i class="bi bi-database-check"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Base de Datos</h6>
+                                    <small class="text-info">Conectada y actualizada</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning text-dark p-2 rounded-circle me-3">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Último Respaldo</h6>
+                                    <small class="text-warning">Hace 2 horas</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-warning text-dark p-2 rounded-circle me-3">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Último Respaldo</h6>
+                                    <small class="text-warning">Hace 2 horas</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.btn {
+    transition: all 0.2s;
+}
+.btn:hover {
+    transform: scale(1.02);
+}
+</style>
+
 <script>
     fetch('../../private/procesos/obtener_datos.php')
         .then(response => response.json())
         .then(data => {
-            // Configuración de degradado para gráficos
-            function createGradient(ctx, color1, color2) {
-                let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, color1);
-                gradient.addColorStop(1, color2);
-                return gradient;
-            }
-
-            // Gráfico de Equipos por Categoría
-            let ctx1 = document.getElementById('graficoEquipos').getContext('2d');
-            new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: data.equipos.map(d => d.categoria),
-                    datasets: [{
-                        label: 'Cantidad de Equipos',
-                        data: data.equipos.map(d => d.total),
-                        backgroundColor: createGradient(ctx1, '#007bff', '#17a2b8'),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-            // Gráfico de Equipos por Ubicación (Barras Horizontales)
-            let ctx2 = document.getElementById('graficoUbicaciones').getContext('2d');
-            new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: data.ubicaciones.map(d => d.ubicacion),
-                    datasets: [{
-                        data: data.ubicaciones.map(d => d.total),
-                        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    indexAxis: 'y'
-                }
-            });
-
-            // Gráfico de Estados de Equipos (Doughnut)
-            new Chart(document.getElementById('graficoEstados'), {
-                type: 'doughnut',
-                data: {
-                    labels: data.estados.map(d => d.estado),
-                    datasets: [{
-                        data: data.estados.map(d => d.total),
-                        backgroundColor: ['#28a745', '#ffc107', '#dc3545', '#6c757d']
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
-            });
-
-            // Gráfico de Movimientos de Equipos (Línea con Puntos)
-            new Chart(document.getElementById('graficoMovimientos'), {
-                type: 'line',
-                data: {
-                    labels: data.movimientos.map(d => d.tipo),
-                    datasets: [{
-                        label: 'Movimientos',
-                        data: data.movimientos.map(d => d.total),
-                        backgroundColor: '#17a2b8',
-                        borderColor: '#17a2b8',
-                        fill: true,
-                        tension: 0.4, // Suavizado de la línea
-                        pointRadius: 5,
-                        pointBackgroundColor: '#17a2b8'
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
-            });
+            document.getElementById('totalEquipos').textContent = data.equipos.reduce((sum, item) => sum + parseInt(item.total), 0);
+            document.getElementById('totalUbicaciones').textContent = data.ubicaciones.length;
+            document.getElementById('totalEstados').textContent = data.estados.length;
+            document.getElementById('totalMovimientos').textContent = data.movimientos.reduce((sum, item) => sum + parseInt(item.total), 0);
         });
 </script>

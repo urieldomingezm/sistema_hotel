@@ -56,46 +56,145 @@ $stmt_ubicaciones->execute();
 $ubicaciones = $stmt_ubicaciones->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Ubicaciones</h1>
-        <!-- Botón para abrir el modal de registro -->
-        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
-            <i class="bi bi-plus"></i> Registrar Nueva Ubicación
-        </button>
-        <table id="tabla-ubicaciones" class="table table-bordered table-borderless table-dark table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Ubicacion</th>
-                    <th>Descripción</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($ubicaciones as $ubicacion): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($ubicacion['id']); ?></td>
-                        <td><?php echo htmlspecialchars($ubicacion['nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($ubicacion['descripcion']); ?></td>
-                        <td>
-                            <!-- Botón para abrir el modal de editar -->
-                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar"
-                                data-id="<?php echo $ubicacion['id']; ?>"
-                                data-nombre="<?php echo htmlspecialchars($ubicacion['nombre']); ?>"
-                                data-descripcion="<?php echo htmlspecialchars($ubicacion['descripcion']); ?>">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <!-- Botón para eliminar -->
-                            <button class="btn btn-danger btn-sm" onclick="confirmarEliminacion(<?php echo $ubicacion['id']; ?>)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+<div class="container-fluid mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">
+                    <i class="bi bi-geo-alt-fill me-2"></i>Gestión de Ubicaciones
+                </h3>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalRegistrar">
+                    <i class="bi bi-plus-circle me-2"></i>Nueva Ubicación
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="tabla-ubicaciones" class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Ubicación</th>
+                            <th>Descripción</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($ubicaciones as $ubicacion): ?>
+                            <tr>
+                                <td>
+                                    <span class="badge bg-secondary">#<?php echo htmlspecialchars($ubicacion['id']); ?></span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-building text-primary me-2"></i>
+                                        <strong><?php echo htmlspecialchars($ubicacion['nombre']); ?></strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted d-inline-block text-truncate" style="max-width: 300px;">
+                                        <?php echo htmlspecialchars($ubicacion['descripcion']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <button class="btn btn-outline-warning btn-sm" 
+                                                onclick="editarUbicacion(<?php echo htmlspecialchars(json_encode($ubicacion)); ?>)">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" 
+                                                onclick="confirmarEliminacion(<?php echo $ubicacion['id']; ?>, '<?php echo $ubicacion['nombre']; ?>')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
+
+<script>
+function confirmarEliminacion(id, nombre) {
+    Swal.fire({
+        title: '¿Eliminar ubicación?',
+        html: `¿Estás seguro de eliminar la ubicación <strong>${nombre}</strong>?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="bi bi-trash me-2"></i>Sí, eliminar',
+        cancelButtonText: '<i class="bi bi-x-circle me-2"></i>Cancelar',
+        reverseButtons: true,
+        customClass: {
+            confirmButton: 'btn btn-danger',
+            cancelButton: 'btn btn-secondary'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = `index.php?page=Gestion ubicaciones&eliminar=${id}`;
+        }
+    });
+}
+
+function editarUbicacion(ubicacion) {
+    const modal = new bootstrap.Modal(document.getElementById('modalEditar'));
+    document.getElementById('idUbicacion').value = ubicacion.id;
+    document.getElementById('nombre').value = ubicacion.nombre;
+    document.getElementById('descripcion').value = ubicacion.descripcion;
+    modal.show();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dataTable = new simpleDatatables.DataTable("#tabla-ubicaciones", {
+        searchable: true,
+        fixedHeight: true,
+        perPage: 10,
+        labels: {
+            placeholder: "Buscar ubicaciones...",
+            perPage: "Mostrar registros por página",
+            noRows: "No se encontraron ubicaciones",
+            info: "Mostrando {start} a {end} de {rows} ubicaciones",
+            noResults: "No hay resultados para la búsqueda"
+        },
+        layout: {
+            top: "{search}",
+            bottom: "{select}{info}{pager}"
+        }
+    });
+});
+</script>
+
+<style>
+.table th {
+    white-space: nowrap;
+}
+.badge {
+    font-size: 0.85em;
+    padding: 0.5em 0.75em;
+}
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+}
+.table-responsive {
+    min-height: 400px;
+}
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+.btn-outline-warning:hover,
+.btn-outline-danger:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+}
+</style>
 
     <!-- Modal para registrar -->
     <div class="modal fade" id="modalRegistrar" tabindex="-1" aria-labelledby="modalRegistrarLabel" aria-hidden="true">
