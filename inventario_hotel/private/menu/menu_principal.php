@@ -14,28 +14,28 @@ class NavigationMenu
     {
         $this->menuItems = [
             'inicio' => [
-                'icon' => 'bi bi-box-seam',
+                'icon' => 'fas fa-home',
                 'text' => 'Inicio',
                 'link' => 'index.php?page=Inicio'
             ],
             'tablas' => [
-                'icon' => 'bi bi-table',
+                'icon' => 'fas fa-table',
                 'text' => 'Tablas',
                 'submenu' => [
-                    ['icon' => 'bi bi-pc-display', 'text' => 'Tabla de Computadoras', 'link' => 'index.php?page=Gestion computadoras'],
-                    ['icon' => 'bi bi-arrow-left-right', 'text' => 'Tabla de Movimientos', 'link' => '#'],
-                    ['icon' => 'bi bi-geo-alt-fill', 'text' => 'Tabla de Ubicaciones', 'link' => 'index.php?page=Gestion ubicaciones'],
-                    ['icon' => 'bi bi-tags-fill', 'text' => 'Tabla de Categorías', 'link' => '#']
+                    ['icon' => 'fas fa-laptop', 'text' => 'Tabla de Computadoras', 'link' => 'index.php?page=Gestion computadoras'],
+                    ['icon' => 'fas fa-exchange-alt', 'text' => 'Tabla de Movimientos', 'link' => '#'],
+                    ['icon' => 'fas fa-map-marker-alt', 'text' => 'Tabla de Ubicaciones', 'link' => 'index.php?page=Gestion ubicaciones'],
+                    ['icon' => 'fas fa-tags', 'text' => 'Tabla de Categorías', 'link' => '#']
                 ]
             ],
             'crear' => [
-                'icon' => 'bi bi-plus-circle-fill',
+                'icon' => 'fas fa-plus-circle',
                 'text' => 'Crear Registro',
                 'submenu' => [
-                    ['icon' => 'bi bi-pc', 'text' => 'Registrar Computadora', 'link' => '#'],
-                    ['icon' => 'bi bi-journal-arrow-up', 'text' => 'Registrar Movimiento', 'link' => '#'],
-                    ['icon' => 'bi bi-geo-fill', 'text' => 'Registrar Ubicación', 'link' => '#'],
-                    ['icon' => 'bi bi-tags', 'text' => 'Registrar Categoría', 'link' => '#']
+                    ['icon' => 'fas fa-desktop', 'text' => 'Registrar Computadora', 'link' => '#'],
+                    ['icon' => 'fas fa-arrows-alt', 'text' => 'Registrar Movimiento', 'link' => '#'],
+                    ['icon' => 'fas fa-map-pin', 'text' => 'Registrar Ubicación', 'link' => '#'],
+                    ['icon' => 'fas fa-tag', 'text' => 'Registrar Categoría', 'link' => '#']
                 ]
             ]
         ];
@@ -44,6 +44,7 @@ class NavigationMenu
     public function renderNavbar()
     {
 ?>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <nav class="navbar navbar-light bg-pantone" aria-label="Light offcanvas navbar">
             <div class="container-fluid">
                 <div class="d-flex justify-content-between w-100">
@@ -141,7 +142,7 @@ class NavigationMenu
         <li class="nav-item">
             <a class="nav-links">
                 <button class="btn btn-danger" href="javascript:void(0);" onclick="showLogoutModal();">
-                    <i class="bi bi-box-arrow-left"></i> Salir
+                    <i class="fas fa-sign-out-alt"></i> Salir
                 </button>
             </a>
         </li>
@@ -190,38 +191,85 @@ class NavigationMenu
             .nav-links {
                 color: rgb(255, 255, 255);
                 display: block;
-                padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
-                font-size: var(--bs-nav-link-font-size);
-                font-weight: var(--bs-nav-link-font-weight);
+                padding: 0.8rem 1rem;
+                font-size: 1rem;
+                font-weight: 500;
                 text-decoration: none;
                 background: 0 0;
                 border: 0;
-                transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
-            }
-
-            .navbar-breands {
-                color: rgb(255, 255, 255);
-                padding-top: var(--bs-navbar-brand-padding-y);
-                padding-bottom: var(--bs-navbar-brand-padding-y);
-                margin-right: var(--bs-navbar-brand-margin-end);
-                font-size: var(--bs-navbar-brand-font-size);
-                text-decoration: none;
-                white-space: nowrap;
-            }
-
-            .dropdown-submenu {
-                position: relative;
+                transition: all 0.3s ease;
+                border-radius: 5px;
+                margin: 2px 0;
             }
 
             .bg-pantone {
                 --bs-bg-opacity: 1;
-                background-color: #1B396A !important;
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }
 
-            .dropdown-submenu>.dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-top: -1px;
+            .dropdown-menu {
+                background: #ffffff;
+                border: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links:hover {
+                background-color: rgba(255, 255, 255, 0.15);
+                transform: translateX(5px);
+                cursor: pointer;
+            }
+
+            .offcanvas {
+                --bs-offcanvas-transition: transform 0.3s ease-in-out;
+            }
+
+            .btn-close {
+                opacity: 1;
+                transition: transform 0.2s;
+            }
+
+            .btn-close:hover {
+                transform: rotate(90deg);
+                opacity: 1;
+            }
+
+            .dropdown-item:hover {
+                background-color: #1e3c72;
+                color: white;
+            }
+
+            .dropdown-item {
+                padding: 0.8rem 1rem;
+                transition: all 0.3s ease;
+            }
+
+            .dropdown-item:hover {
+                background-color: #1B396A;
+                color: white;
+                transform: translateX(5px);
+            }
+
+            .dropdown-menu {
+                border: none;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn-danger {
+                transition: all 0.3s ease;
+            }
+
+            .btn-danger:hover {
+                transform: scale(1.05);
+            }
+
+            .form-control {
+                border-radius: 20px;
+            }
+
+            .btn-outline-light {
+                border-radius: 20px;
+                padding: 0.375rem 1.5rem;
             }
         </style>
     <?php
@@ -231,6 +279,19 @@ class NavigationMenu
     {
     ?>
         <script>
+            // Add this at the beginning
+            document.addEventListener('DOMContentLoaded', function() {
+                const dropdownItems = document.querySelectorAll('.dropdown-item');
+                const offcanvas = document.getElementById('offcanvasNavbarLight');
+                const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
+
+                dropdownItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        bsOffcanvas.hide();
+                    });
+                });
+            });
+
             function showLogoutModal() {
                 Swal.fire({
                     title: '¿Estás seguro de que deseas cerrar sesión?',
