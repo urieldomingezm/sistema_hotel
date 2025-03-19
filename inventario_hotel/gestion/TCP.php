@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once(CONFIG_PATH . 'bd.php');
 
 // Conectar a la base de datos

@@ -1,7 +1,7 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once(CONFIG_PATH . 'bd.php');
-require_once(TEMPLATES_PATH . 'header.php');
+require_once(TEMPLATES_PATH . 'plantilla_header.php');
 ?>
 
 <div class="container-fluid mt-3">
@@ -238,7 +238,7 @@ require_once(TEMPLATES_PATH . 'header.php');
 </style>
 
 <script>
-    fetch('../../private/procesos/obtener_datos.php')
+    fetch('../private/procesos/obtener_datos.php')
         .then(response => response.json())
         .then(data => {
             document.getElementById('totalEquipos').textContent = data.equipos.reduce((sum, item) => sum + parseInt(item.total), 0);

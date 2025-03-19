@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = 'public/gestion_inventario/index.php';
+                                window.location.href = 'gestion/index.php';
                             }
                         });
                     } else {

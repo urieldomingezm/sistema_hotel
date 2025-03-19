@@ -1,10 +1,15 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+// Cargar variables de entorno desde .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 function conectarBD() {
-    $servername = "db";  // Nombre del servicio en docker-compose.yml
-    $username = "root";
-    $password = "root";
-    $database = "hotel_inventario";
+    $servername = $_ENV['DB_HOST'];
+    $username = $_ENV['DB_USER'];
+    $password = $_ENV['DB_PASSWORD'];
+    $database = $_ENV['DB_NAME'];
 
     try {
         // Crear conexión PDO
@@ -12,19 +17,14 @@ function conectarBD() {
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $conn->exec("SET NAMES 'utf8'");
         
-        // Aquí se puede mostrar el contenido de la página sin errores
         echo "";
         
-        // Retornar la conexión para ser utilizada en otros lugares si es necesario
         return $conn;
     } catch(PDOException $e) {
-        // Si ocurre un error, se captura y muestra el mensaje de error
         echo "<body style='color: black;'>Error de conexión: " . $e->getMessage() . "</body>";
         return null;
     }
 }
 
-// Llamada a la función de conexión
 $conn = conectarBD();
-
 ?>

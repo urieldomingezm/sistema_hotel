@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 ?>
 
 <!-- Loading Screen -->
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php
-require_once(TEMPLATES_PATH . 'header.php');
+require_once(TEMPLATES_PATH . 'plantilla_header.php');
 require_once(MENU_PATH . 'menu_principal.php');
 
 // Verify session
@@ -135,5 +135,5 @@ if (isset($_GET['page'])) {
     include 'FO.php';
 }
 
-require_once(TEMPLATES_PATH . 'footer.php');
+require_once(TEMPLATES_PATH . 'plantilla_footer.php');
 ?>
