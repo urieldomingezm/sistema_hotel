@@ -1,7 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once(CONFIG_PATH . 'bd.php');
-require_once(TEMPLATES_PATH . 'plantilla_header.php');
 ?>
 
 <div class="container-fluid mt-3">

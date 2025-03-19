@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
+require_once(MENU_PATH . 'menu_principal.php');
 ?>
 
 <!-- Loading Screen -->
@@ -131,8 +132,6 @@ if (isset($_GET['page'])) {
             echo "<div class='alert alert-warning'>Página no encontrada</div>";
             header("refresh:3;url=index.php");
     }
-} else {
-    include 'FO.php';
 }
 
 require_once(TEMPLATES_PATH . 'plantilla_footer.php');

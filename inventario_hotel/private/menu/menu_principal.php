@@ -1,97 +1,81 @@
 <?php
-class NavigationMenu
+class BootstrapNavbar
 {
+    private $brand;
     private $menuItems;
-    private $brandName;
+    private $searchEnabled;
 
-    public function __construct()
+    public function __construct($brand = 'Hotel Inventory')
     {
-        $this->brandName = "Iberostar Selection Playa Mita | Gestion de Inventarios";
-        $this->initializeMenuItems();
+        $this->brand = $brand;
+        $this->searchEnabled = true;
+        $this->initializeMenu();
     }
 
-    private function initializeMenuItems()
+    private function initializeMenu()
     {
         $this->menuItems = [
-            'inicio' => [
-                'icon' => 'fas fa-home',
+            [
                 'text' => 'Inicio',
+                'icon' => 'fas fa-house',
                 'link' => 'index.php?page=Inicio'
             ],
-            'tablas' => [
-                'icon' => 'fas fa-table',
-                'text' => 'Tablas',
+            [
+                'text' => 'Inventory',
+                'icon' => 'fas fa-boxes',
                 'submenu' => [
-                    ['icon' => 'fas fa-laptop', 'text' => 'Tabla de Computadoras', 'link' => 'index.php?page=Gestion computadoras'],
-                    ['icon' => 'fas fa-exchange-alt', 'text' => 'Tabla de Movimientos', 'link' => '#'],
-                    ['icon' => 'fas fa-map-marker-alt', 'text' => 'Tabla de Ubicaciones', 'link' => 'index.php?page=Gestion ubicaciones'],
-                    ['icon' => 'fas fa-tags', 'text' => 'Tabla de Categorías', 'link' => '#']
+                    ['text' => 'Computadoras', 'icon' => 'fas fa-laptop', 'link' => 'index.php?page=Gestion computadoras'],
+                    ['text' => 'Ubicaciones', 'icon' => 'fas fa-map-marker-alt', 'link' => 'index.php?page=Gestion ubicaciones'],
+                    ['text' => 'Categories', 'icon' => 'fas fa-tags', 'link' => 'index.php?page=categories']
                 ]
             ],
-            'crear' => [
-                'icon' => 'fas fa-plus-circle',
-                'text' => 'Crear Registro',
+            [
+                'text' => 'Reports',
+                'icon' => 'fas fa-chart-bar',
                 'submenu' => [
-                    ['icon' => 'fas fa-desktop', 'text' => 'Registrar Computadora', 'link' => '#'],
-                    ['icon' => 'fas fa-arrows-alt', 'text' => 'Registrar Movimiento', 'link' => '#'],
-                    ['icon' => 'fas fa-map-pin', 'text' => 'Registrar Ubicación', 'link' => '#'],
-                    ['icon' => 'fas fa-tag', 'text' => 'Registrar Categoría', 'link' => '#']
+                    ['text' => 'Daily Report', 'icon' => 'fas fa-calendar-day', 'link' => 'index.php?page=daily-report'],
+                    ['text' => 'Monthly Report', 'icon' => 'fas fa-calendar-alt', 'link' => 'index.php?page=monthly-report']
+                ]
+            ],
+            [
+                'text' => 'Usuario',
+                'icon' => 'fas fa-user',
+                'submenu' => [
+                    ['text' => 'Perfil de usuario', 'icon' => 'fas fa-user-circle', 'link' => 'index.php?page=daily-report'],
+                    ['text' => 'Cerrar session', 'icon' => 'fas fa-sign-out-alt', 'link' => 'index.php?page=monthly-report']
                 ]
             ]
         ];
     }
 
-    public function renderNavbar()
+    public function render()
     {
 ?>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-        <nav class="navbar navbar-light bg-pantone" aria-label="Light offcanvas navbar">
+
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:  #1B396A;">
             <div class="container-fluid">
-                <div class="d-flex justify-content-between w-100">
-                    <a class="navbar-breands"><strong class="SII"><?php echo $this->brandName; ?></strong></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasNavbarLight" aria-controls="offcanvasNavbarLight">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                <a class="navbar-brand" href="#"><?php echo $this->brand; ?></a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <?php $this->renderMenuItems(); ?>
+                    </ul>
+
+                    <?php if ($this->searchEnabled) $this->renderSearchForm(); ?>
+
                 </div>
-                <?php $this->renderOffcanvasMenu(); ?>
             </div>
         </nav>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <?php
         $this->renderStyles();
-        $this->renderScripts();
-    }
-
-    private function renderOffcanvasMenu()
-    {
-    ?>
-        <div class="offcanvas offcanvas-end bg-pantone" tabindex="-1" id="offcanvasNavbarLight">
-            <div class="offcanvas-header justify-content-center position-relative">
-                <button type="button" class="btn-close position-absolute btn-close-white"
-                    style="top: 20px; right: 20px;" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <?php
-                    $this->renderSearchForm();
-                    $this->renderMenuItems();
-                    $this->renderLogoutButton();
-                    ?>
-                </ul>
-            </div>
-        </div>
-    <?php
-    }
-
-    private function renderSearchForm()
-    {
-    ?>
-        <form class="d-flex" action="index.php" method="GET">
-            <input class="form-control me-2" type="search" name="q" placeholder="Buscar...">
-            <button class="btn btn-outline-light" type="submit">Buscar</button>
-        </form>
-        <br>
-    <?php
     }
 
     private function renderMenuItems()
@@ -105,12 +89,23 @@ class NavigationMenu
         }
     }
 
+    private function renderSingleItem($item)
+    {
+    ?>
+        <li class="nav-item">
+            <a class="nav-link" href="<?php echo $item['link']; ?>">
+                <i class="<?php echo $item['icon']; ?> me-1"></i> <?php echo $item['text']; ?>
+            </a>
+        </li>
+    <?php
+    }
+
     private function renderDropdownItem($item)
     {
     ?>
         <li class="nav-item dropdown">
-            <a class="nav-links dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <strong><i class="<?php echo $item['icon']; ?> me-1"></i> <?php echo $item['text']; ?></strong>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="<?php echo $item['icon']; ?> me-1"></i> <?php echo $item['text']; ?>
             </a>
             <ul class="dropdown-menu">
                 <?php foreach ($item['submenu'] as $subItem): ?>
@@ -125,27 +120,13 @@ class NavigationMenu
     <?php
     }
 
-    private function renderSingleItem($item)
+    private function renderSearchForm()
     {
     ?>
-        <li class="nav-item">
-            <a class="nav-links" href="<?php echo $item['link']; ?>">
-                <strong><i class="<?php echo $item['icon']; ?> me-1"></i> <?php echo $item['text']; ?></strong>
-            </a>
-        </li>
-    <?php
-    }
-
-    private function renderLogoutButton()
-    {
-    ?>
-        <li class="nav-item">
-            <a class="nav-links">
-                <button class="btn btn-danger" href="javascript:void(0);" onclick="showLogoutModal();">
-                    <i class="fas fa-sign-out-alt"></i> Salir
-                </button>
-            </a>
-        </li>
+        <form class="d-flex" action="index.php" method="GET">
+            <input class="form-control me-2" type="search" name="q" placeholder="Search...">
+            <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
     <?php
     }
 
@@ -153,166 +134,66 @@ class NavigationMenu
     {
     ?>
         <style>
-            .navbar-toggler-icon {
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-            }
-
-            .navbar-toggler {
-                padding: var(--bs-navbar-toggler-padding-y) var(--bs-navbar-toggler-padding-x);
-                font-size: var(--bs-navbar-toggler-font-size);
-                line-height: 1;
-                color: rgb(0 0 0 / 0%);
-                background-color: transparent;
-                border: var(--bs-border-width) solid rgb(0 0 0 / 0%);
-                border-radius: var(--bs-navbar-toggler-border-radius);
-                transition: var(--bs-navbar-toggler-transition);
-            }
-
-            @media (max-width: 767px) {
-                .SII::before {
-                    content: "I.S.P.M. | Gestion de Inventarios";
-                    display: inline-block;
-                }
-
-                .SII {
-                    visibility: hidden;
-                }
-
-                .SII::before {
-                    visibility: visible;
-                }
-
-                .navbar-breands {
-                    overflow-x: hidden;
-                    width: 100%;
-                }
-            }
-
-            .nav-links {
-                color: rgb(255, 255, 255);
-                display: block;
+            .navbar {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
                 padding: 0.8rem 1rem;
-                font-size: 1rem;
+            }
+
+            .nav-link i {
+                font-size: 1.2rem;
+                width: 25px;
+                text-align: center;
+                margin-right: 8px;
+            }
+
+            .dropdown-item i {
+                font-size: 1.1rem;
+                width: 25px;
+                text-align: center;
+            }
+
+            .navbar-brand {
+                font-size: 1.4rem;
                 font-weight: 500;
-                text-decoration: none;
-                background: 0 0;
-                border: 0;
-                transition: all 0.3s ease;
-                border-radius: 5px;
-                margin: 2px 0;
-            }
-
-            .bg-pantone {
-                --bs-bg-opacity: 1;
-                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .dropdown-menu {
-                background: #ffffff;
-                border: none;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            }
-
-            .nav-links:hover {
-                background-color: rgba(255, 255, 255, 0.15);
-                transform: translateX(5px);
-                cursor: pointer;
-            }
-
-            .offcanvas {
-                --bs-offcanvas-transition: transform 0.3s ease-in-out;
-            }
-
-            .btn-close {
-                opacity: 1;
-                transition: transform 0.2s;
-            }
-
-            .btn-close:hover {
-                transform: rotate(90deg);
-                opacity: 1;
-            }
-
-            .dropdown-item:hover {
-                background-color: #1e3c72;
-                color: white;
             }
 
             .dropdown-item {
-                padding: 0.8rem 1rem;
-                transition: all 0.3s ease;
+                padding: 0.7rem 1.2rem;
             }
 
             .dropdown-item:hover {
-                background-color: #1B396A;
-                color: white;
-                transform: translateX(5px);
+                background-color: #f8f9fa;
             }
 
-            .dropdown-menu {
-                border: none;
-                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            .form-control:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
             }
 
-            .btn-danger {
-                transition: all 0.3s ease;
+            .fa-user-circle {
+                font-size: 1.5rem;
             }
 
-            .btn-danger:hover {
-                transform: scale(1.05);
-            }
-
-            .form-control {
-                border-radius: 20px;
-            }
-
-            .btn-outline-light {
-                border-radius: 20px;
-                padding: 0.375rem 1.5rem;
+            @media (max-width: 768px) {
+                .nav-link i {
+                    width: 20px;
+                    margin-right: 10px;
+                }
             }
         </style>
-    <?php
-    }
 
-    private function renderScripts()
-    {
-    ?>
         <script>
-            // Add this at the beginning
-            document.addEventListener('DOMContentLoaded', function() {
-                const dropdownItems = document.querySelectorAll('.dropdown-item');
-                const offcanvas = document.getElementById('offcanvasNavbarLight');
-                const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
-
-                dropdownItems.forEach(item => {
-                    item.addEventListener('click', () => {
-                        bsOffcanvas.hide();
-                    });
-                });
-            });
-
-            function showLogoutModal() {
-                Swal.fire({
-                    title: '¿Estás seguro de que deseas cerrar sesión?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Cerrar Sesión',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/private/procesos/logout.php';
-                    }
-                });
+            function confirmLogout() {
+                if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
+                    window.location.href = '/private/procesos/logout.php';
+                }
             }
         </script>
 <?php
     }
 }
 
-// Initialize and render the menu
-$menu = new NavigationMenu();
-$menu->renderNavbar();
+// Usage
+$navbar = new BootstrapNavbar('Iberostar Selection Playa Mita | Gestión de Inventarios');
+$navbar->render();
 ?>
