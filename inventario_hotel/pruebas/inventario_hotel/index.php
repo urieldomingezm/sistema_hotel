@@ -158,7 +158,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 <?php 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/rutas.php');
 
-require_once(TEMPLATES_PATH . 'plantilla_footer.php');
+require_once(TEMPLATES_PATH . 'footer.php');
 ?>

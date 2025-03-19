@@ -1,0 +1,34 @@
+services:
+  web:
+    build: .
+    ports:
+      - "9090:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root  
+      MYSQL_DATABASE: hotel_inventario  
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db  
+      PMA_PORT: 3306  
+      PMA_USER: root  
+      PMA_PASSWORD: root  
+    ports:
+      - "8081:80"  
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:

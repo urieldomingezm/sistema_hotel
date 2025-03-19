@@ -201,10 +201,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </body>
 </html>
-
-
-<?php 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
-
-require_once(TEMPLATES_PATH . 'plantilla_footer.php');
-?>
