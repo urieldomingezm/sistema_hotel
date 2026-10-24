@@ -1,16 +1,8 @@
 <?php
 session_start();
 
-$host = 'db';
-$dbname = 'hotel_inventario';
-$username = 'root';
-$password = 'root';
-
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Error de conexión: ' . $e->getMessage()]);
+require_once __DIR__ . '/private/conexion/bd.php';
+if (!$conn) {
     exit;
 }
 
